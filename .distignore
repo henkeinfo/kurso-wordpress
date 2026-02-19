@@ -1,0 +1,8 @@
+.git
+.gitignore
+.github
+specs
+README.md
+CHANGELOG.md
+composer.json
+composer.lock

@@ -30,3 +30,5 @@ wp-content/uploads/
 # Tests
 /tests/coverage/
 .phpunit.result.cache
+
+aicontext

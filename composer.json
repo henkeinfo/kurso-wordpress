@@ -1,6 +1,7 @@
 {
     "name": "kurso/kurso-for-wordpress",
     "description": "KURSO WordPress Plugin",
+    "license": "MIT",
     "type": "wordpress-plugin",
     "require": {
         "php": ">=8.0",
