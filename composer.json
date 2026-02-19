@@ -1,0 +1,13 @@
+{
+    "name": "kurso/kurso-for-wordpress",
+    "description": "KURSO WordPress Plugin",
+    "type": "wordpress-plugin",
+    "require": {
+        "php": ">=8.0",
+        "twig/twig": "^3.0"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "vendor-dir": "vendor"
+    }
+}

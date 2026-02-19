@@ -1,0 +1,13 @@
+.kurso-admin h1 { margin-bottom: 20px; }
+.kurso-admin .nav-tab-wrapper { margin-bottom: 20px; }
+.kurso-form { max-width: 900px; }
+.kurso-form textarea.code { font-family: monospace; font-size: 13px; }
+.kurso-queries-header { margin: 20px 0 15px; }
+.kurso-query-table td, .kurso-query-table th { vertical-align: middle; }
+.kurso-empty { background: #f0f6fc; border: 1px solid #c3d9f0; border-radius: 4px; padding: 30px; text-align: center; margin: 20px 0; }
+.kurso-badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 12px; font-weight: 600; }
+.kurso-badge--ok { background: #d4edda; color: #155724; }
+.kurso-badge--warn { background: #fff3cd; color: #856404; }
+.kurso-shortcode-hint { margin-top: 6px; }
+.kurso-shortcode-hint summary { cursor: pointer; color: #2271b1; font-size: 12px; }
+.kurso-shortcode-hint code { display: block; background: #f6f7f7; padding: 4px 8px; margin-top: 4px; font-size: 12px; }

@@ -1,0 +1,32 @@
+# Composer-Abhängigkeiten (werden beim Build installiert)
+/vendor/
+
+# Composer-Binaries
+/composer.phar
+
+# IDE & Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Node (falls künftig ein Build-Schritt für den Block hinzukommt)
+node_modules/
+npm-debug.log*
+
+# Build-Artefakte
+/dist/
+*.zip
+
+# PHP-Logs
+*.log
+
+# WordPress-spezifisch (falls das Plugin-Verzeichnis direkt im WP-Root liegt)
+wp-config.php
+wp-content/uploads/
+
+# Tests
+/tests/coverage/
+.phpunit.result.cache
