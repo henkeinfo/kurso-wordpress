@@ -7,6 +7,9 @@ versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- GitHub Action to build a release ZIP and publish a GitHub Release on version tag push (closes #2)
+
 ## [0.0.1] – 2026-02-19
 
 ### Added

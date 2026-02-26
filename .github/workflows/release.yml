@@ -1,0 +1,41 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Get version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+
+      - name: Create plugin zip
+        run: |
+          mkdir -p /tmp/build/kurso-wordpress
+          rsync -r --exclude-from=.distignore . /tmp/build/kurso-wordpress/
+          cd /tmp/build
+          zip -r kurso-wordpress-${{ steps.version.outputs.VERSION }}.zip kurso-wordpress/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: /tmp/build/kurso-wordpress-${{ steps.version.outputs.VERSION }}.zip
+          generate_release_notes: true

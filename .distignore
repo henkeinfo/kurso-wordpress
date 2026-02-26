@@ -1,7 +1,9 @@
 .git
 .gitignore
 .github
+.distignore
 specs
+CLAUDE.md
 README.md
 CHANGELOG.md
 composer.json
