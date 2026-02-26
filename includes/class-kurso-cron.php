@@ -47,6 +47,7 @@ class Kurso_Cron {
 
         $interval = max( 1, (int) ( $query['interval'] ?? 60 ) );
         set_transient( 'kurso_query_' . $slug, $result, $interval * 60 );
+        update_option( 'kurso_last_fetch_' . $slug, time(), false );
     }
 
     public static function fetch_now( string $slug ): true|WP_Error {
@@ -62,6 +63,7 @@ class Kurso_Cron {
 
         $interval = max( 1, (int) ( $query['interval'] ?? 60 ) );
         set_transient( 'kurso_query_' . $slug, $result, $interval * 60 );
+        update_option( 'kurso_last_fetch_' . $slug, time(), false );
         return true;
     }
 

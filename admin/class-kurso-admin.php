@@ -145,25 +145,32 @@ class Kurso_Admin {
                     <th><?php esc_html_e( 'Name', 'kurso-wordpress' ); ?></th>
                     <th><?php esc_html_e( 'Slug', 'kurso-wordpress' ); ?></th>
                     <th><?php esc_html_e( 'Interval', 'kurso-wordpress' ); ?></th>
-                    <th><?php esc_html_e( 'Cache', 'kurso-wordpress' ); ?></th>
+                    <th><?php esc_html_e( 'Last fetch', 'kurso-wordpress' ); ?></th>
                     <th><?php esc_html_e( 'Actions', 'kurso-wordpress' ); ?></th>
                 </tr>
             </thead>
             <tbody>
             <?php foreach ( $queries as $q ) :
-                $slug     = $q['slug'] ?? '';
-                $cached   = get_transient( 'kurso_query_' . $slug );
-                $has_cache = $cached !== false;
+                $slug       = $q['slug'] ?? '';
+                $cached     = get_transient( 'kurso_query_' . $slug );
+                $has_cache  = $cached !== false;
+                $last_fetch = get_option( 'kurso_last_fetch_' . $slug );
             ?>
                 <tr>
                     <td><strong><?php echo esc_html( $q['name'] ?? $slug ); ?></strong></td>
                     <td><code><?php echo esc_html( $slug ); ?></code></td>
                     <td><?php echo esc_html( $q['interval'] ?? 60 ); ?> min</td>
                     <td>
-                        <?php if ( $has_cache ) : ?>
-                            <span class="kurso-badge kurso-badge--ok"><?php esc_html_e( 'Present', 'kurso-wordpress' ); ?></span>
+                        <?php if ( $last_fetch ) : ?>
+                            <span class="kurso-badge kurso-badge--ok"
+                                  title="<?php echo esc_attr( date_i18n( 'Y-m-d H:i:s', $last_fetch ) ); ?>">
+                                <?php echo esc_html( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $last_fetch ) ); ?>
+                            </span>
+                            <?php if ( ! $has_cache ) : ?>
+                                <span class="kurso-badge kurso-badge--warn"><?php esc_html_e( 'Cache expired', 'kurso-wordpress' ); ?></span>
+                            <?php endif; ?>
                         <?php else : ?>
-                            <span class="kurso-badge kurso-badge--warn"><?php esc_html_e( 'Empty', 'kurso-wordpress' ); ?></span>
+                            <span class="kurso-badge kurso-badge--warn"><?php esc_html_e( 'Never', 'kurso-wordpress' ); ?></span>
                         <?php endif; ?>
                     </td>
                     <td>
@@ -353,6 +360,7 @@ TWIG;
 
         Kurso_Cron::unschedule( $slug );
         Kurso_Settings::delete_query( $slug );
+        delete_option( 'kurso_last_fetch_' . $slug );
 
         wp_redirect( admin_url( 'options-general.php?page=kurso-settings&tab=queries&kurso_notice=' . urlencode( __( 'Query deleted.', 'kurso-wordpress' ) ) ) );
         exit;
