@@ -26,7 +26,7 @@ class Kurso_Cron {
                 $schedules[ $key ] = [
                     'interval' => $interval * 60,
                     /* translators: %d: interval in minutes */
-                    'display'  => sprintf( __( 'Every %d minutes (KURSO)', 'kurso-for-wordpress' ), $interval ),
+                    'display'  => sprintf( __( 'Every %d minutes (KURSO)', 'kurso-wordpress' ), $interval ),
                 ];
             }
         }
@@ -52,7 +52,7 @@ class Kurso_Cron {
     public static function fetch_now( string $slug ): true|WP_Error {
         $query = Kurso_Settings::get_query( $slug );
         if ( ! $query ) {
-            return new WP_Error( 'kurso_not_found', sprintf( __( 'Query not found: %s', 'kurso-for-wordpress' ), $slug ) );
+            return new WP_Error( 'kurso_not_found', sprintf( __( 'Query not found: %s', 'kurso-wordpress' ), $slug ) );
         }
 
         $result = Kurso_GraphQL::query( $query['graphql'] ?? '' );

@@ -1,7 +1,12 @@
 {
-    "name": "kurso/kurso-for-wordpress",
+    "name": "kurso/kurso-wordpress",
+
     "description": "KURSO WordPress Plugin",
+    "homepage": "https://www.kurso.de",
     "license": "MIT",
+    "support": {
+        "source": "https://github.com/henkeinfo/kurso-wordpress"
+    },
     "type": "wordpress-plugin",
     "require": {
         "php": ">=8.0",

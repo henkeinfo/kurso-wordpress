@@ -25,7 +25,7 @@ class Kurso_Shortcode {
 
         if ( empty( $atts['query'] ) ) {
             return current_user_can( 'manage_options' )
-                ? '<div style="color:red;">' . __( 'KURSO Shortcode: Kein Query angegeben. Beispiel: [kurso query="mein-query"]', 'kurso-for-wordpress' ) . '</div>'
+                ? '<div style="color:red;">' . __( 'KURSO Shortcode: Kein Query angegeben. Beispiel: [kurso query="mein-query"]', 'kurso-wordpress' ) . '</div>'
                 : '';
         }
 

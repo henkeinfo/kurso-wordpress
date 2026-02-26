@@ -24,7 +24,7 @@ class Kurso_Admin {
 
     public function add_menu(): void {
         add_options_page(
-            __( 'KURSO Settings', 'kurso-for-wordpress' ),
+            __( 'KURSO Settings', 'kurso-wordpress' ),
             'KURSO',
             'manage_options',
             'kurso-settings',
@@ -56,13 +56,13 @@ class Kurso_Admin {
 
             <nav class="nav-tab-wrapper">
                 <a href="?page=kurso-settings&tab=settings" class="nav-tab <?php echo $active_tab === 'settings' ? 'nav-tab-active' : ''; ?>">
-                    <?php esc_html_e( 'Connection', 'kurso-for-wordpress' ); ?>
+                    <?php esc_html_e( 'Connection', 'kurso-wordpress' ); ?>
                 </a>
                 <a href="?page=kurso-settings&tab=queries" class="nav-tab <?php echo $active_tab === 'queries' ? 'nav-tab-active' : ''; ?>">
-                    <?php esc_html_e( 'Queries', 'kurso-for-wordpress' ); ?>
+                    <?php esc_html_e( 'Queries', 'kurso-wordpress' ); ?>
                 </a>
                 <?php if ( $active_tab === 'query_edit' ) : ?>
-                <a href="#" class="nav-tab nav-tab-active"><?php esc_html_e( 'Edit Query', 'kurso-for-wordpress' ); ?></a>
+                <a href="#" class="nav-tab nav-tab-active"><?php esc_html_e( 'Edit Query', 'kurso-wordpress' ); ?></a>
                 <?php endif; ?>
             </nav>
 
@@ -89,17 +89,17 @@ class Kurso_Admin {
 
             <table class="form-table">
                 <tr>
-                    <th scope="row"><label for="graphql_url"><?php esc_html_e( 'GraphQL URL', 'kurso-for-wordpress' ); ?></label></th>
+                    <th scope="row"><label for="graphql_url"><?php esc_html_e( 'GraphQL URL', 'kurso-wordpress' ); ?></label></th>
                     <td>
                         <input type="url" id="graphql_url" name="graphql_url"
                                value="<?php echo esc_attr( $url ); ?>"
                                placeholder="https://my-system.kurso.de/api/graphql"
                                class="regular-text" required>
-                        <p class="description"><?php printf( esc_html__( 'Format: %s', 'kurso-for-wordpress' ), '<code>https://&lt;systemname&gt;.kurso.de/api/graphql</code>' ); ?></p>
+                        <p class="description"><?php printf( esc_html__( 'Format: %s', 'kurso-wordpress' ), '<code>https://&lt;systemname&gt;.kurso.de/api/graphql</code>' ); ?></p>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="username"><?php esc_html_e( 'Username', 'kurso-for-wordpress' ); ?></label></th>
+                    <th scope="row"><label for="username"><?php esc_html_e( 'Username', 'kurso-wordpress' ); ?></label></th>
                     <td>
                         <input type="text" id="username" name="username"
                                value="<?php echo esc_attr( $user ); ?>"
@@ -107,21 +107,21 @@ class Kurso_Admin {
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="password"><?php esc_html_e( 'Password', 'kurso-for-wordpress' ); ?></label></th>
+                    <th scope="row"><label for="password"><?php esc_html_e( 'Password', 'kurso-wordpress' ); ?></label></th>
                     <td>
                         <input type="password" id="password" name="password"
-                               placeholder="<?php echo Kurso_Settings::get_password() ? esc_attr__( '(saved)', 'kurso-for-wordpress' ) : ''; ?>"
+                               placeholder="<?php echo Kurso_Settings::get_password() ? esc_attr__( '(saved)', 'kurso-wordpress' ) : ''; ?>"
                                class="regular-text" autocomplete="new-password">
-                        <p class="description"><?php esc_html_e( 'Leave blank to keep the existing password.', 'kurso-for-wordpress' ); ?></p>
+                        <p class="description"><?php esc_html_e( 'Leave blank to keep the existing password.', 'kurso-wordpress' ); ?></p>
                     </td>
                 </tr>
             </table>
 
             <p class="submit">
-                <?php submit_button( __( 'Save Settings', 'kurso-for-wordpress' ), 'primary', 'submit', false ); ?>
+                <?php submit_button( __( 'Save Settings', 'kurso-wordpress' ), 'primary', 'submit', false ); ?>
                 &nbsp;
                 <a href="<?php echo admin_url( 'admin-post.php?action=kurso_test_connection&_wpnonce=' . wp_create_nonce( 'kurso_test_connection' ) ); ?>"
-                   class="button button-secondary"><?php esc_html_e( 'Test Connection', 'kurso-for-wordpress' ); ?></a>
+                   class="button button-secondary"><?php esc_html_e( 'Test Connection', 'kurso-wordpress' ); ?></a>
             </p>
         </form>
         <?php
@@ -131,22 +131,22 @@ class Kurso_Admin {
         $queries = Kurso_Settings::get_queries();
         ?>
         <div class="kurso-queries-header">
-            <a href="?page=kurso-settings&tab=query_edit" class="button button-primary">+ <?php esc_html_e( 'New Query', 'kurso-for-wordpress' ); ?></a>
+            <a href="?page=kurso-settings&tab=query_edit" class="button button-primary">+ <?php esc_html_e( 'New Query', 'kurso-wordpress' ); ?></a>
         </div>
 
         <?php if ( empty( $queries ) ) : ?>
             <div class="kurso-empty">
-                <p><?php printf( esc_html__( 'No queries configured yet. Click %s to get started.', 'kurso-for-wordpress' ), '<strong>' . esc_html__( 'New Query', 'kurso-for-wordpress' ) . '</strong>' ); ?></p>
+                <p><?php printf( esc_html__( 'No queries configured yet. Click %s to get started.', 'kurso-wordpress' ), '<strong>' . esc_html__( 'New Query', 'kurso-wordpress' ) . '</strong>' ); ?></p>
             </div>
         <?php else : ?>
         <table class="wp-list-table widefat fixed striped kurso-query-table">
             <thead>
                 <tr>
-                    <th><?php esc_html_e( 'Name', 'kurso-for-wordpress' ); ?></th>
-                    <th><?php esc_html_e( 'Slug', 'kurso-for-wordpress' ); ?></th>
-                    <th><?php esc_html_e( 'Interval', 'kurso-for-wordpress' ); ?></th>
-                    <th><?php esc_html_e( 'Cache', 'kurso-for-wordpress' ); ?></th>
-                    <th><?php esc_html_e( 'Actions', 'kurso-for-wordpress' ); ?></th>
+                    <th><?php esc_html_e( 'Name', 'kurso-wordpress' ); ?></th>
+                    <th><?php esc_html_e( 'Slug', 'kurso-wordpress' ); ?></th>
+                    <th><?php esc_html_e( 'Interval', 'kurso-wordpress' ); ?></th>
+                    <th><?php esc_html_e( 'Cache', 'kurso-wordpress' ); ?></th>
+                    <th><?php esc_html_e( 'Actions', 'kurso-wordpress' ); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -161,25 +161,25 @@ class Kurso_Admin {
                     <td><?php echo esc_html( $q['interval'] ?? 60 ); ?> min</td>
                     <td>
                         <?php if ( $has_cache ) : ?>
-                            <span class="kurso-badge kurso-badge--ok"><?php esc_html_e( 'Present', 'kurso-for-wordpress' ); ?></span>
+                            <span class="kurso-badge kurso-badge--ok"><?php esc_html_e( 'Present', 'kurso-wordpress' ); ?></span>
                         <?php else : ?>
-                            <span class="kurso-badge kurso-badge--warn"><?php esc_html_e( 'Empty', 'kurso-for-wordpress' ); ?></span>
+                            <span class="kurso-badge kurso-badge--warn"><?php esc_html_e( 'Empty', 'kurso-wordpress' ); ?></span>
                         <?php endif; ?>
                     </td>
                     <td>
                         <a href="?page=kurso-settings&tab=query_edit&slug=<?php echo esc_attr( $slug ); ?>"
-                           class="button button-small"><?php esc_html_e( 'Edit', 'kurso-for-wordpress' ); ?></a>
+                           class="button button-small"><?php esc_html_e( 'Edit', 'kurso-wordpress' ); ?></a>
 
                         <a href="<?php echo admin_url( 'admin-post.php?action=kurso_fetch_now&slug=' . urlencode( $slug ) . '&_wpnonce=' . wp_create_nonce( 'kurso_fetch_now_' . $slug ) ); ?>"
-                           class="button button-small"><?php esc_html_e( 'Fetch now', 'kurso-for-wordpress' ); ?></a>
+                           class="button button-small"><?php esc_html_e( 'Fetch now', 'kurso-wordpress' ); ?></a>
 
                         <a href="<?php echo admin_url( 'admin-post.php?action=kurso_delete_query&slug=' . urlencode( $slug ) . '&_wpnonce=' . wp_create_nonce( 'kurso_delete_query_' . $slug ) ); ?>"
                            class="button button-small button-link-delete"
-                           onclick="return confirm('<?php echo esc_js( sprintf( __( 'Really delete query "%s"?', 'kurso-for-wordpress' ), $slug ) ); ?>')"><?php esc_html_e( 'Delete', 'kurso-for-wordpress' ); ?></a>
+                           onclick="return confirm('<?php echo esc_js( sprintf( __( 'Really delete query "%s"?', 'kurso-wordpress' ), $slug ) ); ?>')"><?php esc_html_e( 'Delete', 'kurso-wordpress' ); ?></a>
 
                         <?php if ( $has_cache ) : ?>
                         <details class="kurso-shortcode-hint">
-                            <summary><?php esc_html_e( 'Shortcode', 'kurso-for-wordpress' ); ?></summary>
+                            <summary><?php esc_html_e( 'Shortcode', 'kurso-wordpress' ); ?></summary>
                             <code>[kurso query="<?php echo esc_html( $slug ); ?>"]</code>
                         </details>
                         <?php endif; ?>
@@ -216,50 +216,50 @@ TWIG;
 
             <table class="form-table">
                 <tr>
-                    <th><label for="q_name"><?php esc_html_e( 'Display Name', 'kurso-for-wordpress' ); ?></label></th>
+                    <th><label for="q_name"><?php esc_html_e( 'Display Name', 'kurso-wordpress' ); ?></label></th>
                     <td>
                         <input type="text" id="q_name" name="q_name"
                                value="<?php echo esc_attr( $query['name'] ?? '' ); ?>"
-                               class="regular-text" required placeholder="<?php esc_attr_e( 'e.g. Current Courses', 'kurso-for-wordpress' ); ?>">
+                               class="regular-text" required placeholder="<?php esc_attr_e( 'e.g. Current Courses', 'kurso-wordpress' ); ?>">
                     </td>
                 </tr>
                 <tr>
-                    <th><label for="q_slug"><?php esc_html_e( 'Slug (ID)', 'kurso-for-wordpress' ); ?></label></th>
+                    <th><label for="q_slug"><?php esc_html_e( 'Slug (ID)', 'kurso-wordpress' ); ?></label></th>
                     <td>
                         <input type="text" id="q_slug" name="q_slug"
                                value="<?php echo esc_attr( $query['slug'] ?? '' ); ?>"
-                               class="regular-text" required placeholder="<?php esc_attr_e( 'e.g. current-courses', 'kurso-for-wordpress' ); ?>"
+                               class="regular-text" required placeholder="<?php esc_attr_e( 'e.g. current-courses', 'kurso-wordpress' ); ?>"
                                pattern="[a-z0-9_-]+"
                                <?php echo ! $is_new ? 'readonly' : ''; ?>>
-                        <p class="description"><?php printf( esc_html__( 'Lowercase letters, numbers, hyphens only. Used in the shortcode: %s', 'kurso-for-wordpress' ), '<code>[kurso query="..."]</code>' ); ?></p>
+                        <p class="description"><?php printf( esc_html__( 'Lowercase letters, numbers, hyphens only. Used in the shortcode: %s', 'kurso-wordpress' ), '<code>[kurso query="..."]</code>' ); ?></p>
                     </td>
                 </tr>
                 <tr>
-                    <th><label for="q_interval"><?php esc_html_e( 'Polling Interval', 'kurso-for-wordpress' ); ?></label></th>
+                    <th><label for="q_interval"><?php esc_html_e( 'Polling Interval', 'kurso-wordpress' ); ?></label></th>
                     <td>
                         <input type="number" id="q_interval" name="q_interval"
                                value="<?php echo esc_attr( $query['interval'] ?? 60 ); ?>"
-                               min="1" max="1440" class="small-text"> <?php esc_html_e( 'minutes', 'kurso-for-wordpress' ); ?>
-                        <p class="description"><?php esc_html_e( 'How often the KURSO API is queried (1 = every minute, 60 = hourly).', 'kurso-for-wordpress' ); ?></p>
+                               min="1" max="1440" class="small-text"> <?php esc_html_e( 'minutes', 'kurso-wordpress' ); ?>
+                        <p class="description"><?php esc_html_e( 'How often the KURSO API is queried (1 = every minute, 60 = hourly).', 'kurso-wordpress' ); ?></p>
                     </td>
                 </tr>
                 <tr>
-                    <th><label for="q_graphql"><?php esc_html_e( 'GraphQL Query', 'kurso-for-wordpress' ); ?></label></th>
+                    <th><label for="q_graphql"><?php esc_html_e( 'GraphQL Query', 'kurso-wordpress' ); ?></label></th>
                     <td>
                         <textarea id="q_graphql" name="q_graphql" rows="12"
                                   class="large-text code" required
                                   placeholder="query { allCourses { name startDate } }"><?php echo esc_textarea( $query['graphql'] ?? '' ); ?></textarea>
-                        <p class="description"><?php esc_html_e( 'Full GraphQL query text. The structure determines which variables are available in the template.', 'kurso-for-wordpress' ); ?></p>
+                        <p class="description"><?php esc_html_e( 'Full GraphQL query text. The structure determines which variables are available in the template.', 'kurso-wordpress' ); ?></p>
                     </td>
                 </tr>
                 <tr>
-                    <th><label for="q_template"><?php esc_html_e( 'Twig Template', 'kurso-for-wordpress' ); ?></label></th>
+                    <th><label for="q_template"><?php esc_html_e( 'Twig Template', 'kurso-wordpress' ); ?></label></th>
                     <td>
                         <textarea id="q_template" name="q_template" rows="16"
                                   class="large-text code"><?php echo esc_textarea( $query['template'] ?? $default_template ); ?></textarea>
                         <p class="description">
                             <?php printf(
-                                esc_html__( 'Twig syntax: %1$s, %2$s, %3$s, %4$s', 'kurso-for-wordpress' ),
+                                esc_html__( 'Twig syntax: %1$s, %2$s, %3$s, %4$s', 'kurso-wordpress' ),
                                 '<code>{{ variable }}</code>',
                                 '<code>{% for item in list %}</code>',
                                 '<code>{% if condition %}</code>',
@@ -271,9 +271,9 @@ TWIG;
             </table>
 
             <p class="submit">
-                <?php submit_button( $is_new ? __( 'Create Query', 'kurso-for-wordpress' ) : __( 'Save Query', 'kurso-for-wordpress' ), 'primary', 'submit', false ); ?>
+                <?php submit_button( $is_new ? __( 'Create Query', 'kurso-wordpress' ) : __( 'Save Query', 'kurso-wordpress' ), 'primary', 'submit', false ); ?>
                 &nbsp;
-                <a href="?page=kurso-settings&tab=queries" class="button"><?php esc_html_e( 'Cancel', 'kurso-for-wordpress' ); ?></a>
+                <a href="?page=kurso-settings&tab=queries" class="button"><?php esc_html_e( 'Cancel', 'kurso-wordpress' ); ?></a>
             </p>
         </form>
         <?php
@@ -281,7 +281,7 @@ TWIG;
 
     public function handle_save_settings(): void {
         check_admin_referer( 'kurso_save_settings' );
-        if ( ! current_user_can( 'manage_options' ) ) wp_die( esc_html__( 'Insufficient permissions.', 'kurso-for-wordpress' ) );
+        if ( ! current_user_can( 'manage_options' ) ) wp_die( esc_html__( 'Insufficient permissions.', 'kurso-wordpress' ) );
 
         $url      = esc_url_raw( $_POST['graphql_url'] ?? '' );
         $username = sanitize_text_field( $_POST['username'] ?? '' );
@@ -292,20 +292,20 @@ TWIG;
             Kurso_Settings::set_password( $password );
         }
 
-        wp_redirect( admin_url( 'options-general.php?page=kurso-settings&tab=settings&kurso_notice=' . urlencode( __( 'Settings saved.', 'kurso-for-wordpress' ) ) ) );
+        wp_redirect( admin_url( 'options-general.php?page=kurso-settings&tab=settings&kurso_notice=' . urlencode( __( 'Settings saved.', 'kurso-wordpress' ) ) ) );
         exit;
     }
 
     public function handle_test_connection(): void {
         check_admin_referer( 'kurso_test_connection' );
-        if ( ! current_user_can( 'manage_options' ) ) wp_die( esc_html__( 'Insufficient permissions.', 'kurso-for-wordpress' ) );
+        if ( ! current_user_can( 'manage_options' ) ) wp_die( esc_html__( 'Insufficient permissions.', 'kurso-wordpress' ) );
 
         $result = Kurso_GraphQL::test_connection();
         if ( is_wp_error( $result ) ) {
-            $msg  = sprintf( __( 'Connection failed: %s', 'kurso-for-wordpress' ), $result->get_error_message() );
+            $msg  = sprintf( __( 'Connection failed: %s', 'kurso-wordpress' ), $result->get_error_message() );
             $type = 'error';
         } else {
-            $msg  = __( 'Connection successful! KURSO API is reachable.', 'kurso-for-wordpress' );
+            $msg  = __( 'Connection successful! KURSO API is reachable.', 'kurso-wordpress' );
             $type = 'success';
         }
 
@@ -315,13 +315,13 @@ TWIG;
 
     public function handle_save_query(): void {
         check_admin_referer( 'kurso_save_query' );
-        if ( ! current_user_can( 'manage_options' ) ) wp_die( esc_html__( 'Insufficient permissions.', 'kurso-for-wordpress' ) );
+        if ( ! current_user_can( 'manage_options' ) ) wp_die( esc_html__( 'Insufficient permissions.', 'kurso-wordpress' ) );
 
         $slug          = sanitize_key( $_POST['q_slug'] ?? '' );
         $original_slug = sanitize_key( $_POST['original_slug'] ?? '' );
 
         if ( empty( $slug ) ) {
-            wp_redirect( admin_url( 'options-general.php?page=kurso-settings&tab=queries&kurso_notice=' . urlencode( __( 'Slug must not be empty.', 'kurso-for-wordpress' ) ) . '&kurso_notice_type=error' ) );
+            wp_redirect( admin_url( 'options-general.php?page=kurso-settings&tab=queries&kurso_notice=' . urlencode( __( 'Slug must not be empty.', 'kurso-wordpress' ) ) . '&kurso_notice_type=error' ) );
             exit;
         }
 
@@ -342,33 +342,33 @@ TWIG;
         Kurso_Cron::unschedule( $slug );
         Kurso_Cron::schedule( $slug, $query['interval'] );
 
-        wp_redirect( admin_url( 'options-general.php?page=kurso-settings&tab=queries&kurso_notice=' . urlencode( sprintf( __( 'Query "%s" saved.', 'kurso-for-wordpress' ), $slug ) ) ) );
+        wp_redirect( admin_url( 'options-general.php?page=kurso-settings&tab=queries&kurso_notice=' . urlencode( sprintf( __( 'Query "%s" saved.', 'kurso-wordpress' ), $slug ) ) ) );
         exit;
     }
 
     public function handle_delete_query(): void {
         $slug = sanitize_key( $_GET['slug'] ?? '' );
         check_admin_referer( 'kurso_delete_query_' . $slug );
-        if ( ! current_user_can( 'manage_options' ) ) wp_die( esc_html__( 'Insufficient permissions.', 'kurso-for-wordpress' ) );
+        if ( ! current_user_can( 'manage_options' ) ) wp_die( esc_html__( 'Insufficient permissions.', 'kurso-wordpress' ) );
 
         Kurso_Cron::unschedule( $slug );
         Kurso_Settings::delete_query( $slug );
 
-        wp_redirect( admin_url( 'options-general.php?page=kurso-settings&tab=queries&kurso_notice=' . urlencode( __( 'Query deleted.', 'kurso-for-wordpress' ) ) ) );
+        wp_redirect( admin_url( 'options-general.php?page=kurso-settings&tab=queries&kurso_notice=' . urlencode( __( 'Query deleted.', 'kurso-wordpress' ) ) ) );
         exit;
     }
 
     public function handle_fetch_now(): void {
         $slug = sanitize_key( $_GET['slug'] ?? '' );
         check_admin_referer( 'kurso_fetch_now_' . $slug );
-        if ( ! current_user_can( 'manage_options' ) ) wp_die( esc_html__( 'Insufficient permissions.', 'kurso-for-wordpress' ) );
+        if ( ! current_user_can( 'manage_options' ) ) wp_die( esc_html__( 'Insufficient permissions.', 'kurso-wordpress' ) );
 
         $result = Kurso_Cron::fetch_now( $slug );
         if ( is_wp_error( $result ) ) {
-            $msg  = sprintf( __( 'Error: %s', 'kurso-for-wordpress' ), $result->get_error_message() );
+            $msg  = sprintf( __( 'Error: %s', 'kurso-wordpress' ), $result->get_error_message() );
             $type = 'error';
         } else {
-            $msg  = sprintf( __( 'Data for "%s" fetched successfully.', 'kurso-for-wordpress' ), $slug );
+            $msg  = sprintf( __( 'Data for "%s" fetched successfully.', 'kurso-wordpress' ), $slug );
             $type = 'success';
         }
 

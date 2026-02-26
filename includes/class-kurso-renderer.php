@@ -15,11 +15,11 @@ class Kurso_Renderer {
             // Kein Cache vorhanden → einmalig direkt abrufen
             $query_config = Kurso_Settings::get_query( $slug );
             if ( ! $query_config ) {
-                return self::error( sprintf( __( 'KURSO: Query "%s" not found.', 'kurso-for-wordpress' ), esc_html( $slug ) ) );
+                return self::error( sprintf( __( 'KURSO: Query "%s" not found.', 'kurso-wordpress' ), esc_html( $slug ) ) );
             }
             $result = Kurso_GraphQL::query( $query_config['graphql'] ?? '' );
             if ( is_wp_error( $result ) ) {
-                return self::error( sprintf( __( 'KURSO: Connection error – %s', 'kurso-for-wordpress' ), esc_html( $result->get_error_message() ) ) );
+                return self::error( sprintf( __( 'KURSO: Connection error – %s', 'kurso-wordpress' ), esc_html( $result->get_error_message() ) ) );
             }
             $interval = max( 1, (int) ( $query_config['interval'] ?? 60 ) );
             set_transient( 'kurso_query_' . $slug, $result, $interval * 60 );
@@ -33,13 +33,13 @@ class Kurso_Renderer {
         }
 
         if ( empty( $template ) ) {
-            return self::error( __( 'KURSO: No template configured.', 'kurso-for-wordpress' ) );
+            return self::error( __( 'KURSO: No template configured.', 'kurso-wordpress' ) );
         }
 
         // Twig rendern
         $html = self::render_twig( $template, $data );
         if ( is_wp_error( $html ) ) {
-            return self::error( sprintf( __( 'KURSO template error: %s', 'kurso-for-wordpress' ), esc_html( $html->get_error_message() ) ) );
+            return self::error( sprintf( __( 'KURSO template error: %s', 'kurso-wordpress' ), esc_html( $html->get_error_message() ) ) );
         }
 
         $class = ! empty( $css_class ) ? ' class="' . esc_attr( $css_class ) . '"' : '';
@@ -48,7 +48,7 @@ class Kurso_Renderer {
 
     public static function render_twig( string $template, array $data ): string|WP_Error {
         if ( ! class_exists( Environment::class ) ) {
-            return new WP_Error( 'kurso_twig', __( 'Twig is not available. Please install Composer dependencies.', 'kurso-for-wordpress' ) );
+            return new WP_Error( 'kurso_twig', __( 'Twig is not available. Please install Composer dependencies.', 'kurso-wordpress' ) );
         }
 
         try {

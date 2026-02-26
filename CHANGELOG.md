@@ -32,5 +32,5 @@ versioning follows [Semantic Versioning](https://semver.org/).
 - Admin CSS and JS (auto-slug from name)
 - Example templates in specification: course list, schedule by course type, single course detail
 
-[Unreleased]: https://github.com/<org>/kurso-for-wordpress/compare/v0.0.1...HEAD
-[0.0.1]: https://github.com/<org>/kurso-for-wordpress/releases/tag/v0.0.1
+[Unreleased]: https://github.com/henkeinfo/kurso-wordpress/compare/v0.0.1...HEAD
+[0.0.1]: https://github.com/henkeinfo/kurso-wordpress/releases/tag/v0.0.1

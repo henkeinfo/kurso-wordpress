@@ -28,12 +28,12 @@ WordPress plugin for integrating the [KURSO course management system](https://ww
 ### From Source
 
 ```bash
-git clone https://github.com/<org>/kurso-for-wordpress.git
-cd kurso-for-wordpress
+git clone https://github.com/henkeinfo/kurso-wordpress.git
+cd kurso-wordpress
 composer install --no-dev --optimize-autoloader
 ```
 
-Then copy the folder to `wp-content/plugins/kurso-for-wordpress/` and activate it in WordPress.
+Then copy the folder to `wp-content/plugins/kurso-wordpress/` and activate it in WordPress.
 
 ## Configuration
 
@@ -129,8 +129,8 @@ Drag the **"KURSO Display"** block from the *Embeds* category into the editor. S
 ## Project Structure
 
 ```
-kurso-for-wordpress/
-├── kurso-for-wordpress.php   # Plugin main file
+kurso-wordpress/
+├── kurso-wordpress.php       # Plugin main file
 ├── admin/
 │   └── class-kurso-admin.php # Admin UI
 ├── includes/

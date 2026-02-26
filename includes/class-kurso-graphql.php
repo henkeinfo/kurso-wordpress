@@ -9,7 +9,7 @@ class Kurso_GraphQL {
         $password = Kurso_Settings::get_password();
 
         if ( empty( $url ) || empty( $username ) || empty( $password ) ) {
-            return new WP_Error( 'kurso_config', __( 'KURSO is not fully configured.', 'kurso-for-wordpress' ) );
+            return new WP_Error( 'kurso_config', __( 'KURSO is not fully configured.', 'kurso-wordpress' ) );
         }
 
         $response = wp_remote_post( $url, [

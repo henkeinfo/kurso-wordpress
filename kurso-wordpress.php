@@ -8,7 +8,7 @@
  * Author URI:  https://www.kurso.de
  * License:     MIT
  * License URI: https://opensource.org/licenses/MIT
- * Text Domain: kurso-for-wordpress
+ * Text Domain: kurso-wordpress
  * Requires at least: 6.0
  * Requires PHP: 8.0
  */
