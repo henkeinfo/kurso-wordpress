@@ -256,7 +256,14 @@ TWIG;
                         <textarea id="q_graphql" name="q_graphql" rows="12"
                                   class="large-text code" required
                                   placeholder="query { allCourses { name startDate } }"><?php echo esc_textarea( $query['graphql'] ?? '' ); ?></textarea>
-                        <p class="description"><?php esc_html_e( 'Full GraphQL query text. The structure determines which variables are available in the template.', 'kurso-wordpress' ); ?></p>
+                        <p class="description">
+                            <?php esc_html_e( 'Full GraphQL query text. The structure determines which variables are available in the template.', 'kurso-wordpress' ); ?>
+                            <?php printf(
+                                esc_html__( 'Twig expressions are evaluated before the query is sent, e.g. %1$s (today) or %2$s (2 weeks ago).', 'kurso-wordpress' ),
+                                '<code>{{ date()|date("Y-m-d") }}</code>',
+                                '<code>{{ date("-2 weeks")|date("Y-m-d") }}</code>'
+                            ); ?>
+                        </p>
                     </td>
                 </tr>
                 <tr>
