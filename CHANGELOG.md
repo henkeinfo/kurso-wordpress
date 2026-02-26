@@ -9,6 +9,7 @@ versioning follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 - GitHub Action to build a release ZIP and publish a GitHub Release on version tag push (closes #2)
+- Query list now shows timestamp of last successful fetch; distinguishes between cache expired and never fetched (closes #3)
 
 ## [0.0.1] – 2026-02-19
 
