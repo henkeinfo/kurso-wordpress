@@ -44,6 +44,35 @@ Jedes Query hat folgende Eigenschaften:
 | GraphQL-Query | Vollständiger Query-Text (freies Textfeld) |
 | Polling-Intervall | Wie oft die API abgefragt wird (in Minuten, Minimum: 1) |
 
+### Dynamische Werte im Query (Twig-Preprocessing)
+
+Bevor der Query an die KURSO-API gesendet wird, wird er durch Twig verarbeitet.
+Damit lassen sich dynamische Werte direkt im Query-Text einbetten — insbesondere Datumswerte für Filter.
+
+**Verfügbare Ausdrücke (Twig-Syntax):**
+
+| Ausdruck | Ergebnis |
+|---|---|
+| `{{ date()\|date("Y-m-d") }}` | Heutiges Datum (ISO 8601) |
+| `{{ date("-2 weeks")\|date("Y-m-d") }}` | Vor 2 Wochen |
+| `{{ date("+1 month")\|date("Y-m-d") }}` | In einem Monat |
+| `{{ date("first day of this month")\|date("Y-m-d") }}` | Erster des aktuellen Monats |
+
+**Beispiel-Query mit dynamischem Datumsfilter:**
+```graphql
+query {
+  allCourses(
+    filter: { startDate_gte: "{{ date("-2 weeks")|date("Y-m-d") }}" }
+    orderBy: startDate_ASC
+  ) {
+    name
+    startDate
+  }
+}
+```
+
+Der Query-Text wird bei **jedem** Abruf neu ausgewertet — der Filter passt sich also automatisch an das aktuelle Datum an.
+
 ### Datenspeicherung
 
 - Ergebnisse werden in der **WordPress Transient API** gespeichert.
