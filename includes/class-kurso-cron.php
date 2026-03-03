@@ -39,7 +39,7 @@ class Kurso_Cron {
             return;
         }
 
-        $result = Kurso_GraphQL::query( $query['graphql'] ?? '' );
+        $result = Kurso_GraphQL::query( $query['graphql'] ?? '', $query['variables'] ?? '' );
         if ( is_wp_error( $result ) ) {
             error_log( 'KURSO Cron Fehler [' . $slug . ']: ' . $result->get_error_message() );
             return;
@@ -56,7 +56,7 @@ class Kurso_Cron {
             return new WP_Error( 'kurso_not_found', sprintf( __( 'Query not found: %s', 'kurso-wordpress' ), $slug ) );
         }
 
-        $result = Kurso_GraphQL::query( $query['graphql'] ?? '' );
+        $result = Kurso_GraphQL::query( $query['graphql'] ?? '', $query['variables'] ?? '' );
         if ( is_wp_error( $result ) ) {
             return $result;
         }
