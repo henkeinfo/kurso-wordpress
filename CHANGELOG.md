@@ -7,6 +7,8 @@ versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.0] – 2026-03-03
+
 ### Security
 - Sanitize all `$_GET` parameters in admin page (`sanitize_key`, `sanitize_text_field`)
 - Add `wp_unslash()` to all `$_GET` and `$_POST` parameters before sanitization
@@ -61,5 +63,6 @@ versioning follows [Semantic Versioning](https://semver.org/).
 - Admin CSS and JS (auto-slug from name)
 - Example templates in specification: course list, schedule by course type, single course detail
 
-[Unreleased]: https://github.com/henkeinfo/kurso-wordpress/compare/v0.0.1...HEAD
+[Unreleased]: https://github.com/henkeinfo/kurso-wordpress/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/henkeinfo/kurso-wordpress/compare/v0.0.1...v0.1.0
 [0.0.1]: https://github.com/henkeinfo/kurso-wordpress/releases/tag/v0.0.1
