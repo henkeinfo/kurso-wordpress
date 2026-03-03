@@ -4,11 +4,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class Kurso_GraphQL {
 
     public static function preprocess( string $graphql_query ): string|WP_Error {
+        if ( ! class_exists( '\Twig\Environment' ) ) {
+            return $graphql_query;
+        }
         try {
             $loader = new \Twig\Loader\ArrayLoader( [ 'q' => $graphql_query ] );
             $twig   = new \Twig\Environment( $loader, [ 'autoescape' => false ] );
             return $twig->render( 'q', [] );
-        } catch ( \Exception $e ) {
+        } catch ( \Throwable $e ) {
             return new WP_Error( 'kurso_twig_query', $e->getMessage() );
         }
     }
