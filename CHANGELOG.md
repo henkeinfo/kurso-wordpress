@@ -7,6 +7,24 @@ versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Security
+- Sanitize all `$_GET` parameters in admin page (`sanitize_key`, `sanitize_text_field`)
+- Add `wp_unslash()` to all `$_GET` and `$_POST` parameters before sanitization
+- Wrap all `admin_url()` output in `esc_url()` in HTML attributes
+- Replace `wp_redirect()` with `wp_safe_redirect()` in all admin handlers
+- Replace base64 password encoding with AES-256-CBC encryption using WordPress AUTH_KEY; automatic migration of existing passwords
+- Replace hardcoded fallback encryption key with auto-generated random key when `AUTH_KEY` is unavailable
+- Apply `wp_kses_post()` to Twig-rendered HTML output on frontend and REST preview
+- Add Twig Sandbox (SecurityPolicy) to both template renderer and variable preprocessor — restricts allowed tags, filters, and functions
+- Truncate HTTP response body in error messages to prevent data leakage
+- Add REST API args schema with `sanitize_callback` and `validate_callback` to all endpoints including `/evaluate-variables`
+- Restrict `/preview` REST endpoint permission from `edit_posts` to `manage_options`
+- Register plugin settings via `register_setting()` with `sanitize_callback`
+- Use `esc_html__()` for translatable strings in HTML context
+- Wrap all `echo` output in `esc_attr()` for HTML attribute context (tab classes, readonly)
+- Wrap `error_log()` in `WP_DEBUG` check to prevent information leakage in production
+- Add `index.php` sentinel files to all plugin directories including root and `assets/js/vendor/`
+
 ### Added
 - GitHub Action to build a release ZIP and publish a GitHub Release on version tag push (closes #2)
 - Query list now shows timestamp of last successful fetch; distinguishes between cache expired and never fetched (closes #3)

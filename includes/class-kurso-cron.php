@@ -41,7 +41,9 @@ class Kurso_Cron {
 
         $result = Kurso_GraphQL::query( $query['graphql'] ?? '', $query['variables'] ?? '' );
         if ( is_wp_error( $result ) ) {
-            error_log( 'KURSO Cron Fehler [' . $slug . ']: ' . $result->get_error_message() );
+            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+                error_log( 'KURSO Cron Fehler [' . $slug . ']: ' . $result->get_error_message() );
+            }
             return;
         }
 

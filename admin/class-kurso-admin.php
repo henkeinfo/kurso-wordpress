@@ -83,9 +83,9 @@ class Kurso_Admin {
     public function render_settings_page(): void {
         if ( ! current_user_can( 'manage_options' ) ) return;
 
-        $active_tab = $_GET['tab'] ?? 'settings';
-        $notice     = $_GET['kurso_notice'] ?? '';
-        $notice_type = $_GET['kurso_notice_type'] ?? 'success';
+        $active_tab  = sanitize_key( wp_unslash( $_GET['tab'] ?? 'settings' ) );
+        $notice      = sanitize_text_field( wp_unslash( $_GET['kurso_notice'] ?? '' ) );
+        $notice_type = sanitize_key( wp_unslash( $_GET['kurso_notice_type'] ?? 'success' ) );
         ?>
         <div class="wrap kurso-admin">
             <h1>⚙️ KURSO for WordPress</h1>
@@ -97,10 +97,10 @@ class Kurso_Admin {
             <?php endif; ?>
 
             <nav class="nav-tab-wrapper">
-                <a href="?page=kurso-settings&tab=settings" class="nav-tab <?php echo $active_tab === 'settings' ? 'nav-tab-active' : ''; ?>">
+                <a href="?page=kurso-settings&tab=settings" class="nav-tab <?php echo esc_attr( $active_tab === 'settings' ? 'nav-tab-active' : '' ); ?>">
                     <?php esc_html_e( 'Connection', 'kurso-wordpress' ); ?>
                 </a>
-                <a href="?page=kurso-settings&tab=queries" class="nav-tab <?php echo $active_tab === 'queries' ? 'nav-tab-active' : ''; ?>">
+                <a href="?page=kurso-settings&tab=queries" class="nav-tab <?php echo esc_attr( $active_tab === 'queries' ? 'nav-tab-active' : '' ); ?>">
                     <?php esc_html_e( 'Queries', 'kurso-wordpress' ); ?>
                 </a>
                 <?php if ( $active_tab === 'query_edit' ) : ?>
@@ -125,7 +125,7 @@ class Kurso_Admin {
         $url  = Kurso_Settings::get_graphql_url();
         $user = Kurso_Settings::get_username();
         ?>
-        <form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>" class="kurso-form">
+        <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="kurso-form">
             <?php wp_nonce_field( 'kurso_save_settings' ); ?>
             <input type="hidden" name="action" value="kurso_save_settings">
 
@@ -162,7 +162,7 @@ class Kurso_Admin {
             <p class="submit">
                 <?php submit_button( __( 'Save Settings', 'kurso-wordpress' ), 'primary', 'submit', false ); ?>
                 &nbsp;
-                <a href="<?php echo admin_url( 'admin-post.php?action=kurso_test_connection&_wpnonce=' . wp_create_nonce( 'kurso_test_connection' ) ); ?>"
+                <a href="<?php echo esc_url( admin_url( 'admin-post.php?action=kurso_test_connection&_wpnonce=' . wp_create_nonce( 'kurso_test_connection' ) ) ); ?>"
                    class="button button-secondary"><?php esc_html_e( 'Test Connection', 'kurso-wordpress' ); ?></a>
             </p>
         </form>
@@ -219,10 +219,10 @@ class Kurso_Admin {
                         <a href="?page=kurso-settings&tab=query_edit&slug=<?php echo esc_attr( $slug ); ?>"
                            class="button button-small"><?php esc_html_e( 'Edit', 'kurso-wordpress' ); ?></a>
 
-                        <a href="<?php echo admin_url( 'admin-post.php?action=kurso_fetch_now&slug=' . urlencode( $slug ) . '&_wpnonce=' . wp_create_nonce( 'kurso_fetch_now_' . $slug ) ); ?>"
+                        <a href="<?php echo esc_url( admin_url( 'admin-post.php?action=kurso_fetch_now&slug=' . urlencode( $slug ) . '&_wpnonce=' . wp_create_nonce( 'kurso_fetch_now_' . $slug ) ) ); ?>"
                            class="button button-small"><?php esc_html_e( 'Fetch now', 'kurso-wordpress' ); ?></a>
 
-                        <a href="<?php echo admin_url( 'admin-post.php?action=kurso_delete_query&slug=' . urlencode( $slug ) . '&_wpnonce=' . wp_create_nonce( 'kurso_delete_query_' . $slug ) ); ?>"
+                        <a href="<?php echo esc_url( admin_url( 'admin-post.php?action=kurso_delete_query&slug=' . urlencode( $slug ) . '&_wpnonce=' . wp_create_nonce( 'kurso_delete_query_' . $slug ) ) ); ?>"
                            class="button button-small button-link-delete"
                            onclick="return confirm('<?php echo esc_js( sprintf( __( 'Really delete query "%s"?', 'kurso-wordpress' ), $slug ) ); ?>')"><?php esc_html_e( 'Delete', 'kurso-wordpress' ); ?></a>
 
@@ -242,7 +242,7 @@ class Kurso_Admin {
     }
 
     private function render_query_edit_tab(): void {
-        $slug  = $_GET['slug'] ?? '';
+        $slug  = sanitize_key( wp_unslash( $_GET['slug'] ?? '' ) );
         $query = $slug ? Kurso_Settings::get_query( $slug ) : null;
         $is_new = ! $query;
 
@@ -296,7 +296,7 @@ GQL;
 </table>
 TWIG;
         ?>
-        <form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>" class="kurso-form">
+        <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="kurso-form">
             <?php wp_nonce_field( 'kurso_save_query' ); ?>
             <input type="hidden" name="action" value="kurso_save_query">
             <input type="hidden" name="original_slug" value="<?php echo esc_attr( $slug ); ?>">
@@ -317,7 +317,7 @@ TWIG;
                                value="<?php echo esc_attr( $query['slug'] ?? '' ); ?>"
                                class="regular-text" required placeholder="<?php esc_attr_e( 'e.g. current-courses', 'kurso-wordpress' ); ?>"
                                pattern="[a-z0-9_-]+"
-                               <?php echo ! $is_new ? 'readonly' : ''; ?>>
+                               <?php echo esc_attr( ! $is_new ? 'readonly' : '' ); ?>>
                         <p class="description"><?php printf( esc_html__( 'Lowercase letters, numbers, hyphens only. Used in the shortcode: %s', 'kurso-wordpress' ), '<code>[kurso query="..."]</code>' ); ?></p>
                     </td>
                 </tr>
@@ -395,16 +395,16 @@ TWIG;
         check_admin_referer( 'kurso_save_settings' );
         if ( ! current_user_can( 'manage_options' ) ) wp_die( esc_html__( 'Insufficient permissions.', 'kurso-wordpress' ) );
 
-        $url      = esc_url_raw( $_POST['graphql_url'] ?? '' );
-        $username = sanitize_text_field( $_POST['username'] ?? '' );
-        $password = $_POST['password'] ?? '';
+        $url      = esc_url_raw( wp_unslash( $_POST['graphql_url'] ?? '' ) );
+        $username = sanitize_text_field( wp_unslash( $_POST['username'] ?? '' ) );
+        $password = wp_unslash( $_POST['password'] ?? '' );
 
         Kurso_Settings::save( [ 'graphql_url' => $url, 'username' => $username ] );
         if ( ! empty( $password ) ) {
             Kurso_Settings::set_password( $password );
         }
 
-        wp_redirect( admin_url( 'options-general.php?page=kurso-settings&tab=settings&kurso_notice=' . urlencode( __( 'Settings saved.', 'kurso-wordpress' ) ) ) );
+        wp_safe_redirect( admin_url( 'options-general.php?page=kurso-settings&tab=settings&kurso_notice=' . urlencode( __( 'Settings saved.', 'kurso-wordpress' ) ) ) );
         exit;
     }
 
@@ -421,7 +421,7 @@ TWIG;
             $type = 'success';
         }
 
-        wp_redirect( admin_url( 'options-general.php?page=kurso-settings&tab=settings&kurso_notice=' . urlencode( $msg ) . '&kurso_notice_type=' . $type ) );
+        wp_safe_redirect( admin_url( 'options-general.php?page=kurso-settings&tab=settings&kurso_notice=' . urlencode( $msg ) . '&kurso_notice_type=' . $type ) );
         exit;
     }
 
@@ -429,18 +429,18 @@ TWIG;
         check_admin_referer( 'kurso_save_query' );
         if ( ! current_user_can( 'manage_options' ) ) wp_die( esc_html__( 'Insufficient permissions.', 'kurso-wordpress' ) );
 
-        $slug          = sanitize_key( $_POST['q_slug'] ?? '' );
-        $original_slug = sanitize_key( $_POST['original_slug'] ?? '' );
+        $slug          = sanitize_key( wp_unslash( $_POST['q_slug'] ?? '' ) );
+        $original_slug = sanitize_key( wp_unslash( $_POST['original_slug'] ?? '' ) );
 
         if ( empty( $slug ) ) {
-            wp_redirect( admin_url( 'options-general.php?page=kurso-settings&tab=queries&kurso_notice=' . urlencode( __( 'Slug must not be empty.', 'kurso-wordpress' ) ) . '&kurso_notice_type=error' ) );
+            wp_safe_redirect( admin_url( 'options-general.php?page=kurso-settings&tab=queries&kurso_notice=' . urlencode( __( 'Slug must not be empty.', 'kurso-wordpress' ) ) . '&kurso_notice_type=error' ) );
             exit;
         }
 
         $query = [
             'slug'      => $slug,
-            'name'      => sanitize_text_field( $_POST['q_name'] ?? $slug ),
-            'interval'  => max( 1, (int) ( $_POST['q_interval'] ?? 60 ) ),
+            'name'      => sanitize_text_field( wp_unslash( $_POST['q_name'] ?? $slug ) ),
+            'interval'  => max( 1, absint( wp_unslash( $_POST['q_interval'] ?? 60 ) ) ),
             'graphql'   => wp_unslash( $_POST['q_graphql'] ?? '' ),
             'variables' => wp_unslash( $_POST['q_variables'] ?? '' ),
             'template'  => wp_unslash( $_POST['q_template'] ?? '' ),
@@ -455,12 +455,12 @@ TWIG;
         Kurso_Cron::unschedule( $slug );
         Kurso_Cron::schedule( $slug, $query['interval'] );
 
-        wp_redirect( admin_url( 'options-general.php?page=kurso-settings&tab=queries&kurso_notice=' . urlencode( sprintf( __( 'Query "%s" saved.', 'kurso-wordpress' ), $slug ) ) ) );
+        wp_safe_redirect( admin_url( 'options-general.php?page=kurso-settings&tab=queries&kurso_notice=' . urlencode( sprintf( __( 'Query "%s" saved.', 'kurso-wordpress' ), $slug ) ) ) );
         exit;
     }
 
     public function handle_delete_query(): void {
-        $slug = sanitize_key( $_GET['slug'] ?? '' );
+        $slug = sanitize_key( wp_unslash( $_GET['slug'] ?? '' ) );
         check_admin_referer( 'kurso_delete_query_' . $slug );
         if ( ! current_user_can( 'manage_options' ) ) wp_die( esc_html__( 'Insufficient permissions.', 'kurso-wordpress' ) );
 
@@ -468,12 +468,12 @@ TWIG;
         Kurso_Settings::delete_query( $slug );
         delete_option( 'kurso_last_fetch_' . $slug );
 
-        wp_redirect( admin_url( 'options-general.php?page=kurso-settings&tab=queries&kurso_notice=' . urlencode( __( 'Query deleted.', 'kurso-wordpress' ) ) ) );
+        wp_safe_redirect( admin_url( 'options-general.php?page=kurso-settings&tab=queries&kurso_notice=' . urlencode( __( 'Query deleted.', 'kurso-wordpress' ) ) ) );
         exit;
     }
 
     public function handle_fetch_now(): void {
-        $slug = sanitize_key( $_GET['slug'] ?? '' );
+        $slug = sanitize_key( wp_unslash( $_GET['slug'] ?? '' ) );
         check_admin_referer( 'kurso_fetch_now_' . $slug );
         if ( ! current_user_can( 'manage_options' ) ) wp_die( esc_html__( 'Insufficient permissions.', 'kurso-wordpress' ) );
 
@@ -486,7 +486,7 @@ TWIG;
             $type = 'success';
         }
 
-        wp_redirect( admin_url( 'options-general.php?page=kurso-settings&tab=queries&kurso_notice=' . urlencode( $msg ) . '&kurso_notice_type=' . $type ) );
+        wp_safe_redirect( admin_url( 'options-general.php?page=kurso-settings&tab=queries&kurso_notice=' . urlencode( $msg ) . '&kurso_notice_type=' . $type ) );
         exit;
     }
 }

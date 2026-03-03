@@ -75,7 +75,21 @@ class Kurso_Block {
         register_rest_route( 'kurso/v1', '/preview', [
             'methods'             => 'POST',
             'callback'            => [ $this, 'rest_preview' ],
-            'permission_callback' => fn() => current_user_can( 'edit_posts' ),
+            'permission_callback' => fn() => current_user_can( 'manage_options' ),
+            'args'                => [
+                'query' => [
+                    'type'              => 'string',
+                    'required'          => true,
+                    'sanitize_callback' => 'sanitize_key',
+                    'validate_callback' => fn( $v ) => is_string( $v ) && preg_match( '/^[a-z0-9_-]+$/', $v ),
+                ],
+                'template' => [
+                    'type'              => 'string',
+                    'required'          => false,
+                    'default'           => '',
+                    'sanitize_callback' => function ( $v ) { return is_string( $v ) ? $v : ''; },
+                ],
+            ],
         ] );
 
         // Rohdaten-Endpunkt ("Rohdaten anzeigen")
@@ -83,6 +97,14 @@ class Kurso_Block {
             'methods'             => 'GET',
             'callback'            => [ $this, 'rest_rawdata' ],
             'permission_callback' => fn() => current_user_can( 'edit_posts' ),
+            'args'                => [
+                'slug' => [
+                    'type'              => 'string',
+                    'required'          => true,
+                    'sanitize_callback' => 'sanitize_key',
+                    'validate_callback' => fn( $v ) => is_string( $v ) && preg_match( '/^[a-z0-9_-]+$/', $v ),
+                ],
+            ],
         ] );
 
         // Twig-Auswertung von Variables-JSON (Admin-Vorschau)
@@ -90,6 +112,14 @@ class Kurso_Block {
             'methods'             => 'POST',
             'callback'            => [ $this, 'rest_evaluate_variables' ],
             'permission_callback' => fn() => current_user_can( 'manage_options' ),
+            'args'                => [
+                'variables' => [
+                    'type'              => 'string',
+                    'required'          => true,
+                    'default'           => '',
+                    'sanitize_callback' => function ( $v ) { return is_string( $v ) ? $v : ''; },
+                ],
+            ],
         ] );
     }
 
@@ -102,7 +132,7 @@ class Kurso_Block {
         }
 
         $html = Kurso_Renderer::render( $slug, $template );
-        return new WP_REST_Response( [ 'html' => $html ] );
+        return new WP_REST_Response( [ 'html' => wp_kses_post( $html ) ] );
     }
 
     public function rest_rawdata( WP_REST_Request $request ): WP_REST_Response {
