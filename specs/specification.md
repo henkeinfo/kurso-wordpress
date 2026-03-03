@@ -28,7 +28,7 @@ Das Plugin legt einen Einstellungsbereich unter **Einstellungen → KURSO** an.
 Zusätzlich gibt es einen **"Verbindung testen"-Button**, der eine Test-Query absetzt
 und Erfolg oder Fehlermeldung im Admin anzeigt.
 
-Zugangsdaten werden verschlüsselt (via WordPress Options API) gespeichert.
+Zugangsdaten werden mit AES-256-CBC verschlüsselt (basierend auf dem WordPress `AUTH_KEY`) und via Options API gespeichert. Ist `AUTH_KEY` nicht definiert, wird ein zufälliger Schlüssel generiert und als Option gespeichert.
 
 ---
 
@@ -213,6 +213,10 @@ Twig escaped alle Ausgaben standardmäßig (`{{ wert }}` = HTML-safe).
 Rohe HTML-Ausgabe nur explizit via `{{ wert|raw }}` — sollte in Templates vermieden werden.
 Twig erlaubt **keine PHP-Ausführung** (`<?php` etc. ist nicht möglich), was User-Templates
 in einem Admin-Bereich sicher macht.
+
+Alle Twig-Umgebungen verwenden die **Twig Sandbox** (`SecurityPolicy`):
+- **Template-Renderer:** erlaubte Tags: `if`, `for`, `set`; erlaubte Filter: `escape`, `date`, `length`, `default`, `join`, `lower`, `upper`, `trim`, `number_format`, `raw`, `nl2br`, `format`; erlaubte Funktionen: `date`, `max`, `min`
+- **Variable-Preprocessor:** erlaubte Tags: `if`, `set`; erlaubte Filter: `date`, `format`; erlaubte Funktionen: `date`
 
 ### Template im Block-Editor
 

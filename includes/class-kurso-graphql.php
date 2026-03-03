@@ -15,9 +15,22 @@ class Kurso_GraphQL {
 
         if ( class_exists( '\Twig\Environment' ) ) {
             try {
-                $loader = new \Twig\Loader\ArrayLoader( [ 'v' => $json ] );
-                $twig   = new \Twig\Environment( $loader, [ 'autoescape' => false ] );
-                $json   = $twig->render( 'v', [] );
+                $loader  = new \Twig\Loader\ArrayLoader( [ 'v' => $json ] );
+                $policy  = new \Twig\Sandbox\SecurityPolicy(
+                    [ 'if', 'set' ],
+                    [ 'date', 'format' ],
+                    [],
+                    [],
+                    [ 'date' ]
+                );
+                $sandbox = new \Twig\Extension\SandboxExtension( $policy, true );
+                $twig    = new \Twig\Environment( $loader, [ 'autoescape' => false ] );
+                $twig->addExtension( $sandbox );
+                $json    = $twig->render( 'v', [] );
+            } catch ( \Twig\Sandbox\SecurityError $e ) {
+                return new WP_Error( 'kurso_twig_variables',
+                    __( 'Variables preprocessing: disallowed Twig construct used.', 'kurso-wordpress' )
+                );
             } catch ( \Throwable $e ) {
                 return new WP_Error( 'kurso_twig_variables', $e->getMessage() );
             }
@@ -68,7 +81,7 @@ class Kurso_GraphQL {
         $data = json_decode( $body, true );
 
         if ( $code !== 200 ) {
-            return new WP_Error( 'kurso_http', sprintf( 'HTTP %d: %s', $code, $body ) );
+            return new WP_Error( 'kurso_http', sprintf( 'HTTP %d: %s', $code, mb_substr( $body, 0, 200 ) ) );
         }
 
         if ( isset( $data['errors'] ) ) {

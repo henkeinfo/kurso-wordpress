@@ -14,7 +14,40 @@ class Kurso_Settings {
         return self::$instance;
     }
 
-    private function __construct() {}
+    private function __construct() {
+        add_action( 'admin_init', [ $this, 'register' ] );
+    }
+
+    public function register(): void {
+        register_setting( 'kurso_settings_group', self::OPTION_KEY, [
+            'type'              => 'array',
+            'sanitize_callback' => [ self::class, 'sanitize_settings' ],
+        ] );
+        register_setting( 'kurso_settings_group', self::QUERIES_KEY, [
+            'type'              => 'array',
+            'sanitize_callback' => [ self::class, 'sanitize_queries' ],
+        ] );
+    }
+
+    public static function sanitize_settings( $input ): array {
+        if ( ! is_array( $input ) ) return [];
+        $clean = [];
+        if ( isset( $input['graphql_url'] ) ) {
+            $clean['graphql_url'] = esc_url_raw( $input['graphql_url'] );
+        }
+        if ( isset( $input['username'] ) ) {
+            $clean['username'] = sanitize_text_field( $input['username'] );
+        }
+        if ( isset( $input['password_encrypted'] ) ) {
+            $clean['password_encrypted'] = $input['password_encrypted'];
+        }
+        return array_merge( get_option( self::OPTION_KEY, [] ), $clean );
+    }
+
+    public static function sanitize_queries( $input ): array {
+        if ( ! is_array( $input ) ) return [];
+        return $input;
+    }
 
     public static function get( string $key, mixed $default = '' ): mixed {
         $settings = get_option( self::OPTION_KEY, [] );
@@ -35,13 +68,67 @@ class Kurso_Settings {
         return self::get( 'username', '' );
     }
 
+    private static function get_encryption_key(): string {
+        if ( defined( 'AUTH_KEY' ) && AUTH_KEY !== '' ) {
+            return hash( 'sha256', AUTH_KEY . 'kurso-password', true );
+        }
+
+        // Generate and persist a random key when AUTH_KEY is unavailable.
+        $stored = get_option( 'kurso_encryption_key', '' );
+        if ( empty( $stored ) ) {
+            $stored = wp_generate_password( 64, true, true );
+            update_option( 'kurso_encryption_key', $stored, false );
+        }
+        return hash( 'sha256', $stored . 'kurso-password', true );
+    }
+
+    private static function encrypt_password( string $password ): string {
+        $key = self::get_encryption_key();
+        $iv  = openssl_random_pseudo_bytes( 16 );
+        $enc = openssl_encrypt( $password, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv );
+        return 'v1:' . base64_encode( $iv . $enc );
+    }
+
+    private static function decrypt_password( string $stored ): string {
+        if ( ! str_starts_with( $stored, 'v1:' ) ) {
+            return '';
+        }
+        $key = self::get_encryption_key();
+        $raw = base64_decode( substr( $stored, 3 ) );
+        if ( $raw === false || strlen( $raw ) < 17 ) {
+            return '';
+        }
+        $iv  = substr( $raw, 0, 16 );
+        $enc = substr( $raw, 16 );
+        $dec = openssl_decrypt( $enc, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv );
+        return $dec !== false ? $dec : '';
+    }
+
     public static function get_password(): string {
-        $enc = self::get( 'password_enc', '' );
-        return $enc ? base64_decode( $enc ) : '';
+        // Try new encrypted format first.
+        $encrypted = self::get( 'password_encrypted', '' );
+        if ( $encrypted ) {
+            return self::decrypt_password( $encrypted );
+        }
+
+        // Migrate legacy base64-encoded password.
+        $legacy = self::get( 'password_enc', '' );
+        if ( $legacy ) {
+            $password = base64_decode( $legacy );
+            if ( $password !== false && $password !== '' ) {
+                self::set_password( $password );
+                $settings = get_option( self::OPTION_KEY, [] );
+                unset( $settings['password_enc'] );
+                update_option( self::OPTION_KEY, $settings );
+                return $password;
+            }
+        }
+
+        return '';
     }
 
     public static function set_password( string $password ): void {
-        self::save( [ 'password_enc' => base64_encode( $password ) ] );
+        self::save( [ 'password_encrypted' => self::encrypt_password( $password ) ] );
     }
 
     // --- Query-Verwaltung ---
