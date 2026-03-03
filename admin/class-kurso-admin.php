@@ -34,8 +34,50 @@ class Kurso_Admin {
 
     public function enqueue_admin_assets( string $hook ): void {
         if ( $hook !== 'settings_page_kurso-settings' ) return;
+
         wp_enqueue_style( 'kurso-admin', KURSO_PLUGIN_URL . 'assets/css/kurso-admin.css', [], KURSO_VERSION );
-        wp_enqueue_script( 'kurso-admin', KURSO_PLUGIN_URL . 'assets/js/kurso-admin.js', [ 'jquery' ], KURSO_VERSION, true );
+
+        // Load CodeMirror via WordPress's proper API.
+        // Returns false if the user has disabled syntax highlighting in their profile.
+        $has_cm = false !== wp_enqueue_code_editor( [ 'type' => 'text/html' ] );
+
+        if ( $has_cm ) {
+            // Save WordPress's CodeMirror reference before other plugins can overwrite window.CodeMirror.
+            wp_add_inline_script( 'wp-codemirror', 'window.kursoCM = (window.wp && window.wp.CodeMirror) || window.CodeMirror;', 'after' );
+
+            wp_enqueue_script(
+                'kurso-cm-multiplex',
+                KURSO_PLUGIN_URL . 'assets/js/vendor/codemirror-addon-multiplex.js',
+                [ 'code-editor' ], KURSO_VERSION, true
+            );
+            wp_enqueue_script(
+                'kurso-cm-twig',
+                KURSO_PLUGIN_URL . 'assets/js/vendor/codemirror-mode-twig.js',
+                [ 'kurso-cm-multiplex' ], KURSO_VERSION, true
+            );
+            wp_enqueue_script(
+                'kurso-cm-graphql',
+                KURSO_PLUGIN_URL . 'assets/js/vendor/codemirror-mode-graphql.js',
+                [ 'code-editor' ], KURSO_VERSION, true
+            );
+            wp_enqueue_script(
+                'kurso-admin',
+                KURSO_PLUGIN_URL . 'assets/js/kurso-admin.js',
+                [ 'jquery', 'kurso-cm-twig', 'kurso-cm-graphql' ], KURSO_VERSION, true
+            );
+        } else {
+            wp_enqueue_script(
+                'kurso-admin',
+                KURSO_PLUGIN_URL . 'assets/js/kurso-admin.js',
+                [ 'jquery' ], KURSO_VERSION, true
+            );
+        }
+
+        wp_localize_script( 'kurso-admin', 'kursoAdmin', [
+            'restUrl'    => rest_url( 'kurso/v1/' ),
+            'nonce'      => wp_create_nonce( 'wp_rest' ),
+            'graphqlUrl' => Kurso_Settings::get_graphql_url(),
+        ] );
     }
 
     public function render_settings_page(): void {
@@ -204,16 +246,54 @@ class Kurso_Admin {
         $query = $slug ? Kurso_Settings::get_query( $slug ) : null;
         $is_new = ! $query;
 
+        $default_graphql = <<<'GQL'
+query Courses($startDateMin: Date!) {
+  allCourses(filter: { startDate_gte: $startDateMin }, orderBy: startDate_ASC, first: 20) {
+    id
+    name
+    startDate
+    endDate
+    location {
+      name
+      town
+    }
+    maxPart
+    _bookingsMeta {
+      count
+    }
+    onlineEnrollmentUrl
+  }
+}
+GQL;
+
+        $default_variables = '{"startDateMin": "{{ date()|date(\'Y-m-d\') }}"}';
+
         $default_template = <<<'TWIG'
-{% for course in allCourses %}
-<div class="kurso-card">
-  <h3>{{ course.name }}</h3>
-  <p>{{ course.startDate|date("d.m.Y") }} – {{ course.endDate|date("d.m.Y") }}</p>
-  {% if course.onlineEnrollmentUrl %}
-    <a href="{{ course.onlineEnrollmentUrl }}" class="kurso-button">Book now</a>
-  {% endif %}
-</div>
-{% endfor %}
+<table class="kurso-table">
+  <thead>
+    <tr>
+      <th>Kurs</th>
+      <th>Beginn</th>
+      <th>Ende</th>
+      <th>Ort</th>
+      <th>Freie Plätze</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for course in allCourses %}
+    {% set frei = course.maxPart - course._bookingsMeta.count %}
+    <tr>
+      <td>{{ course.name }}</td>
+      <td>{{ course.startDate|date("d.m.Y") }}</td>
+      <td>{{ course.endDate|date("d.m.Y") }}</td>
+      <td>{{ course.location.name }}{% if course.location.town %}, {{ course.location.town }}{% endif %}</td>
+      <td>{% if frei > 0 %}{{ frei }} / {{ course.maxPart }}{% else %}<span class="kurso-badge--voll">Ausgebucht</span>{% endif %}</td>
+      <td>{% if frei > 0 and course.onlineEnrollmentUrl %}<a href="{{ course.onlineEnrollmentUrl }}" class="kurso-button">Jetzt buchen</a>{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 TWIG;
         ?>
         <form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>" class="kurso-form">
@@ -254,15 +334,33 @@ TWIG;
                     <th><label for="q_graphql"><?php esc_html_e( 'GraphQL Query', 'kurso-wordpress' ); ?></label></th>
                     <td>
                         <textarea id="q_graphql" name="q_graphql" rows="12"
-                                  class="large-text code" required
-                                  placeholder="query { allCourses { name startDate } }"><?php echo esc_textarea( $query['graphql'] ?? '' ); ?></textarea>
+                                  class="large-text code" required><?php echo esc_textarea( $query['graphql'] ?? $default_graphql ); ?></textarea>
+                        <div class="kurso-editor-actions">
+                            <button type="button" id="kurso-open-graphiql" class="button button-small">
+                                <?php esc_html_e( 'Open in GraphiQL ↗', 'kurso-wordpress' ); ?>
+                            </button>
+                            <span class="spinner" id="kurso-graphiql-spinner"></span>
+                        </div>
                         <p class="description">
-                            <?php esc_html_e( 'Full GraphQL query text. The structure determines which variables are available in the template.', 'kurso-wordpress' ); ?>
-                            <?php printf(
-                                esc_html__( 'Twig expressions are evaluated before the query is sent, e.g. %1$s (today) or %2$s (2 weeks ago).', 'kurso-wordpress' ),
-                                '<code>{{ date()|date("Y-m-d") }}</code>',
-                                '<code>{{ date("-2 weeks")|date("Y-m-d") }}</code>'
-                            ); ?>
+                            <?php esc_html_e( 'Standard GraphQL query. Use variables (e.g. $fromDate) for dynamic values — define them in the Variables field below.', 'kurso-wordpress' ); ?>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="q_variables"><?php esc_html_e( 'Variables (JSON)', 'kurso-wordpress' ); ?></label></th>
+                    <td>
+                        <textarea id="q_variables" name="q_variables" rows="6"
+                                  class="large-text code"><?php echo esc_textarea( $query['variables'] ?? $default_variables ); ?></textarea>
+                        <div class="kurso-editor-actions">
+                            <button type="button" id="kurso-eval-vars" class="button button-small">
+                                <?php esc_html_e( '▶ Evaluate', 'kurso-wordpress' ); ?>
+                            </button>
+                            <span class="spinner" id="kurso-eval-spinner"></span>
+                        </div>
+                        <pre id="kurso-var-result" class="kurso-var-result" style="display:none"></pre>
+                        <p class="description">
+                            <?php esc_html_e( 'GraphQL variable values as JSON. Twig expressions are evaluated at fetch time, e.g.:', 'kurso-wordpress' ); ?>
+                            <code>{"fromDate": "{{ date('-2 weeks')|date('Y-m-d') }}"}</code>
                         </p>
                     </td>
                 </tr>
@@ -340,11 +438,12 @@ TWIG;
         }
 
         $query = [
-            'slug'     => $slug,
-            'name'     => sanitize_text_field( $_POST['q_name'] ?? $slug ),
-            'interval' => max( 1, (int) ( $_POST['q_interval'] ?? 60 ) ),
-            'graphql'  => wp_unslash( $_POST['q_graphql'] ?? '' ),
-            'template' => wp_unslash( $_POST['q_template'] ?? '' ),
+            'slug'      => $slug,
+            'name'      => sanitize_text_field( $_POST['q_name'] ?? $slug ),
+            'interval'  => max( 1, (int) ( $_POST['q_interval'] ?? 60 ) ),
+            'graphql'   => wp_unslash( $_POST['q_graphql'] ?? '' ),
+            'variables' => wp_unslash( $_POST['q_variables'] ?? '' ),
+            'template'  => wp_unslash( $_POST['q_template'] ?? '' ),
         ];
 
         // Delete old query if slug changed

@@ -2,6 +2,45 @@
 .kurso-admin .nav-tab-wrapper { margin-bottom: 20px; }
 .kurso-form { max-width: 900px; }
 .kurso-form textarea.code { font-family: monospace; font-size: 13px; }
+
+/* CodeMirror editors */
+.kurso-form .CodeMirror {
+    border: 1px solid #8c8f94;
+    border-radius: 2px;
+    font-size: 13px;
+    height: auto;
+    min-height: 120px;
+}
+.kurso-form #q_graphql + .CodeMirror { min-height: 240px; }
+.kurso-form #q_template + .CodeMirror { min-height: 320px; }
+.kurso-form .CodeMirror-scroll { min-height: inherit; }
+
+/* Editor action bar (below CodeMirror / textarea) */
+.kurso-editor-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 6px 0 4px;
+}
+.kurso-editor-actions .spinner { float: none; margin: 0; }
+
+/* Variable evaluate result box */
+.kurso-var-result {
+    background: #f6f7f7;
+    border: 1px solid #c3c4c7;
+    border-radius: 2px;
+    font-family: monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    margin: 0 0 6px;
+    max-height: 160px;
+    overflow: auto;
+    padding: 8px 10px;
+    white-space: pre;
+}
+.kurso-var-result--ok  { border-color: #8c8f94; color: #1d2327; }
+.kurso-var-result--error { background: #fef0f0; border-color: #cc1818; color: #cc1818; }
+
 .kurso-queries-header { margin: 20px 0 15px; }
 .kurso-query-table td, .kurso-query-table th { vertical-align: middle; }
 .kurso-empty { background: #f0f6fc; border: 1px solid #c3d9f0; border-radius: 4px; padding: 30px; text-align: center; margin: 20px 0; }

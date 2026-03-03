@@ -10,7 +10,13 @@ versioning follows [Semantic Versioning](https://semver.org/).
 ### Added
 - GitHub Action to build a release ZIP and publish a GitHub Release on version tag push (closes #2)
 - Query list now shows timestamp of last successful fetch; distinguishes between cache expired and never fetched (closes #3)
-- GraphQL queries are preprocessed through Twig before being sent to the API, allowing dynamic date expressions like `{{ date("-2 weeks")|date("Y-m-d") }}` (closes #4)
+- GraphQL queries support native variables via a dedicated **Variables (JSON)** field; Twig expressions in the variables field allow dynamic values like `{{ date('-2 weeks')|date('Y-m-d') }}` (closes #4)
+- Syntax highlighting in the query editor: GraphQL mode for the query field, JSON mode for the variables field, HTML+Twig mode for the template field (using WordPress-bundled CodeMirror)
+- **▶ Evaluate** button in the Variables field previews evaluated Twig expressions server-side via REST API
+- **Open in GraphiQL ↗** button opens the configured GraphQL endpoint in a new tab
+
+### Fixed
+- CodeMirror: use `window.wp.CodeMirror` (the real WordPress CodeMirror instance) instead of `window.CodeMirror` (empty placeholder set by the bundle)
 
 ## [0.0.1] – 2026-02-19
 

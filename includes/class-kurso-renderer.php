@@ -17,7 +17,7 @@ class Kurso_Renderer {
             if ( ! $query_config ) {
                 return self::error( sprintf( __( 'KURSO: Query "%s" not found.', 'kurso-wordpress' ), esc_html( $slug ) ) );
             }
-            $result = Kurso_GraphQL::query( $query_config['graphql'] ?? '' );
+            $result = Kurso_GraphQL::query( $query_config['graphql'] ?? '', $query_config['variables'] ?? '' );
             if ( is_wp_error( $result ) ) {
                 return self::error( sprintf( __( 'KURSO: Connection error – %s', 'kurso-wordpress' ), esc_html( $result->get_error_message() ) ) );
             }

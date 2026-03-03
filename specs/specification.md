@@ -41,15 +41,17 @@ Jedes Query hat folgende Eigenschaften:
 |---|---|
 | Name (Slug) | Eindeutiger Bezeichner, z.B. `aktuelle-kurse` |
 | Anzeigename | Lesbarer Name für die Admin-Oberfläche |
-| GraphQL-Query | Vollständiger Query-Text (freies Textfeld) |
+| GraphQL-Query | Vollständiger GraphQL-Query-Text (mit Syntax-Highlighting) |
+| Variables (JSON) | GraphQL-Variablen als JSON; Twig-Ausdrücke werden zur Laufzeit ausgewertet |
 | Polling-Intervall | Wie oft die API abgefragt wird (in Minuten, Minimum: 1) |
 
-### Dynamische Werte im Query (Twig-Preprocessing)
+### Dynamische Werte in den GraphQL-Variablen (Twig-Preprocessing)
 
-Bevor der Query an die KURSO-API gesendet wird, wird er durch Twig verarbeitet.
-Damit lassen sich dynamische Werte direkt im Query-Text einbetten — insbesondere Datumswerte für Filter.
+GraphQL-Variablen werden vor dem Senden durch Twig verarbeitet.
+Damit lassen sich dynamische Werte in den Variablen einbetten — insbesondere Datumswerte für Filter.
+Der Query-Text selbst ist standardkonformes GraphQL ohne Twig-Syntax.
 
-**Verfügbare Ausdrücke (Twig-Syntax):**
+**Verfügbare Twig-Ausdrücke in den Variablen:**
 
 | Ausdruck | Ergebnis |
 |---|---|
@@ -58,11 +60,13 @@ Damit lassen sich dynamische Werte direkt im Query-Text einbetten — insbesonde
 | `{{ date("+1 month")\|date("Y-m-d") }}` | In einem Monat |
 | `{{ date("first day of this month")\|date("Y-m-d") }}` | Erster des aktuellen Monats |
 
-**Beispiel-Query mit dynamischem Datumsfilter:**
+**Beispiel:**
+
+GraphQL-Query:
 ```graphql
-query {
+query GetCourses($fromDate: String) {
   allCourses(
-    filter: { startDate_gte: "{{ date("-2 weeks")|date("Y-m-d") }}" }
+    filter: { startDate: { gte: $fromDate } }
     orderBy: startDate_ASC
   ) {
     name
@@ -71,7 +75,21 @@ query {
 }
 ```
 
-Der Query-Text wird bei **jedem** Abruf neu ausgewertet — der Filter passt sich also automatisch an das aktuelle Datum an.
+Variables (JSON mit Twig):
+```json
+{
+  "fromDate": "{{ date('-2 weeks')|date('Y-m-d') }}"
+}
+```
+
+Die Variablen werden bei **jedem** Abruf neu ausgewertet — der Filter passt sich automatisch an das aktuelle Datum an.
+
+### Syntax-Highlighting im Admin
+
+Im Query-Editor werden alle drei Felder mit CodeMirror hervorgehoben:
+- **GraphQL-Query**: GraphQL-Modus (Schlüsselwörter, Typen, Variablen, Direktiven)
+- **Variables**: JavaScript/JSON-Modus
+- **Twig-Template**: HTML+Twig-Modus (vollständiges HTML-Highlighting mit überlagerten Twig-Blöcken)
 
 ### Datenspeicherung
 

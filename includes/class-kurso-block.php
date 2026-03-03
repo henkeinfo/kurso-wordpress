@@ -84,6 +84,13 @@ class Kurso_Block {
             'callback'            => [ $this, 'rest_rawdata' ],
             'permission_callback' => fn() => current_user_can( 'edit_posts' ),
         ] );
+
+        // Twig-Auswertung von Variables-JSON (Admin-Vorschau)
+        register_rest_route( 'kurso/v1', '/evaluate-variables', [
+            'methods'             => 'POST',
+            'callback'            => [ $this, 'rest_evaluate_variables' ],
+            'permission_callback' => fn() => current_user_can( 'manage_options' ),
+        ] );
     }
 
     public function rest_preview( WP_REST_Request $request ): WP_REST_Response {
@@ -102,5 +109,14 @@ class Kurso_Block {
         $slug = sanitize_key( $request->get_param( 'slug' ) ?? '' );
         $data = Kurso_Renderer::get_raw_data( $slug );
         return new WP_REST_Response( [ 'data' => $data ] );
+    }
+
+    public function rest_evaluate_variables( WP_REST_Request $request ): WP_REST_Response {
+        $variables_json = $request->get_param( 'variables' ) ?? '';
+        $result = Kurso_GraphQL::preprocess_variables( $variables_json );
+        if ( is_wp_error( $result ) ) {
+            return new WP_REST_Response( [ 'error' => $result->get_error_message() ], 400 );
+        }
+        return new WP_REST_Response( [ 'result' => $result ], 200 );
     }
 }
