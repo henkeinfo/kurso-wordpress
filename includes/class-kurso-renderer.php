@@ -4,8 +4,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\Error\Error as TwigError;
-use Twig\Extension\SandboxExtension;
-use Twig\Sandbox\SecurityPolicy;
 
 class Kurso_Renderer {
 
@@ -54,17 +52,8 @@ class Kurso_Renderer {
         }
 
         try {
-            $loader  = new ArrayLoader( [ 'template' => $template ] );
-            $policy  = new SecurityPolicy(
-                [ 'if', 'for', 'set' ],
-                [ 'escape', 'date', 'length', 'default', 'join', 'lower', 'upper', 'trim', 'number_format', 'raw', 'nl2br', 'format' ],
-                [],
-                [],
-                [ 'date', 'max', 'min' ]
-            );
-            $sandbox = new SandboxExtension( $policy, true );
-            $twig    = new Environment( $loader, [ 'autoescape' => 'html' ] );
-            $twig->addExtension( $sandbox );
+            $loader = new ArrayLoader( [ 'template' => $template ] );
+            $twig   = new Environment( $loader, [ 'autoescape' => 'html' ] );
             return $twig->render( 'template', $data );
         } catch ( TwigError $e ) {
             return new WP_Error( 'kurso_twig', $e->getMessage() );
