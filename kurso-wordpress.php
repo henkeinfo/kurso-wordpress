@@ -3,7 +3,7 @@
  * Plugin Name: KURSO for WordPress
  * Plugin URI:  https://www.kurso.de
  * Description: Zeigt Kursdaten aus dem KURSO Kursverwaltungssystem via GraphQL auf WordPress-Seiten an.
- * Version:     0.1.0
+ * Version:     0.1.1
  * Author:      KURSO
  * Author URI:  https://www.kurso.de
  * License:     MIT
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'KURSO_VERSION', '0.1.0' );
+define( 'KURSO_VERSION', '0.1.1' );
 define( 'KURSO_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'KURSO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'KURSO_PLUGIN_FILE', __FILE__ );

@@ -7,6 +7,8 @@ versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.1] – 2026-03-11
+
 ### Changed
 - Remove Twig Sandbox from template renderer — templates are admin-only, so the restriction provided no security benefit and blocked legitimate filters like `date_modify` and `slice`
 
