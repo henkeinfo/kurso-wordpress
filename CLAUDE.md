@@ -16,6 +16,14 @@ WordPress plugin that displays course data from the KURSO course management syst
   - Add new entries to the changelog under `## [Unreleased]`
 - No commits without a matching changelog entry
 
+## Release Process
+
+1. Bump version in `kurso-wordpress.php` (header + `KURSO_VERSION` constant) and `readme.txt` (`Stable tag`)
+2. Move `## [Unreleased]` entries in `CHANGELOG.md` to a new `## [x.y.z] – YYYY-MM-DD` section
+3. Commit: `Release x.y.z`
+4. Push tag: `git tag vx.y.z && git push origin vx.y.z`
+5. **GitHub Release is created automatically by GitHub Actions** — do not run `gh release create` manually
+
 ## Tech Stack
 
 | Component | Detail |
