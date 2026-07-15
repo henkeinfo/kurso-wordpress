@@ -7,6 +7,8 @@ versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.0-rc.0] – 2026-07-15
+
 ### Added
 - **Shortcode** column with copy button in the query list — the shortcode is now always visible, no longer only when a cache exists
 - Documentation for usage with page builders (Elementor, WPBakery, BeBuilder) in README, readme.txt and specification
@@ -72,6 +74,8 @@ versioning follows [Semantic Versioning](https://semver.org/).
 - Admin CSS and JS (auto-slug from name)
 - Example templates in specification: course list, schedule by course type, single course detail
 
-[Unreleased]: https://github.com/henkeinfo/kurso-wordpress/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/henkeinfo/kurso-wordpress/compare/v1.0.0-rc.0...HEAD
+[1.0.0-rc.0]: https://github.com/henkeinfo/kurso-wordpress/compare/v0.1.1...v1.0.0-rc.0
+[0.1.1]: https://github.com/henkeinfo/kurso-wordpress/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/henkeinfo/kurso-wordpress/compare/v0.0.1...v0.1.0
 [0.0.1]: https://github.com/henkeinfo/kurso-wordpress/releases/tag/v0.0.1
