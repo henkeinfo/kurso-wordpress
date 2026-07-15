@@ -186,6 +186,7 @@ class Kurso_Admin {
                 <tr>
                     <th><?php esc_html_e( 'Name', 'kurso-wordpress' ); ?></th>
                     <th><?php esc_html_e( 'Slug', 'kurso-wordpress' ); ?></th>
+                    <th><?php esc_html_e( 'Shortcode', 'kurso-wordpress' ); ?></th>
                     <th><?php esc_html_e( 'Interval', 'kurso-wordpress' ); ?></th>
                     <th><?php esc_html_e( 'Last fetch', 'kurso-wordpress' ); ?></th>
                     <th><?php esc_html_e( 'Actions', 'kurso-wordpress' ); ?></th>
@@ -201,6 +202,14 @@ class Kurso_Admin {
                 <tr>
                     <td><strong><?php echo esc_html( $q['name'] ?? $slug ); ?></strong></td>
                     <td><code><?php echo esc_html( $slug ); ?></code></td>
+                    <td class="kurso-shortcode-cell">
+                        <?php $shortcode = '[kurso query="' . $slug . '"]'; ?>
+                        <code><?php echo esc_html( $shortcode ); ?></code>
+                        <button type="button"
+                                class="button button-small kurso-copy-shortcode"
+                                data-shortcode="<?php echo esc_attr( $shortcode ); ?>"
+                                data-copied-label="<?php esc_attr_e( 'Copied ✓', 'kurso-wordpress' ); ?>"><?php esc_html_e( 'Copy', 'kurso-wordpress' ); ?></button>
+                    </td>
                     <td><?php echo esc_html( $q['interval'] ?? 60 ); ?> min</td>
                     <td>
                         <?php if ( $last_fetch ) : ?>
@@ -225,13 +234,6 @@ class Kurso_Admin {
                         <a href="<?php echo esc_url( admin_url( 'admin-post.php?action=kurso_delete_query&slug=' . urlencode( $slug ) . '&_wpnonce=' . wp_create_nonce( 'kurso_delete_query_' . $slug ) ) ); ?>"
                            class="button button-small button-link-delete"
                            onclick="return confirm('<?php echo esc_js( sprintf( __( 'Really delete query "%s"?', 'kurso-wordpress' ), $slug ) ); ?>')"><?php esc_html_e( 'Delete', 'kurso-wordpress' ); ?></a>
-
-                        <?php if ( $has_cache ) : ?>
-                        <details class="kurso-shortcode-hint">
-                            <summary><?php esc_html_e( 'Shortcode', 'kurso-wordpress' ); ?></summary>
-                            <code>[kurso query="<?php echo esc_html( $slug ); ?>"]</code>
-                        </details>
-                        <?php endif; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

@@ -126,6 +126,39 @@ jQuery(function ($) {
         });
     });
 
+    // Copy shortcode to clipboard (queries list)
+    $(document).on('click', '.kurso-copy-shortcode', function () {
+        var $btn      = $(this);
+        // .attr() instead of .data(): jQuery would try to JSON-parse values starting with "["
+        var shortcode = $btn.attr('data-shortcode');
+
+        function showFeedback() {
+            var original = $btn.text();
+            $btn.text($btn.data('copied-label')).prop('disabled', true);
+            setTimeout(function () {
+                $btn.text(original).prop('disabled', false);
+            }, 1500);
+        }
+
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(shortcode).then(showFeedback);
+            return;
+        }
+
+        // Fallback for non-secure contexts (plain HTTP admin)
+        var textarea = document.createElement('textarea');
+        textarea.value = shortcode;
+        textarea.style.position = 'fixed';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            showFeedback();
+        } catch (e) {}
+        document.body.removeChild(textarea);
+    });
+
     // -------------------------------------------------------------------------
     // CodeMirror editors — only initialized if CodeMirror is available.
     // Use window.kursoCM (saved before other plugins can overwrite window.CodeMirror).

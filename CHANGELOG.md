@@ -7,6 +7,10 @@ versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- **Shortcode** column with copy button in the query list — the shortcode is now always visible, no longer only when a cache exists
+- Documentation for usage with page builders (Elementor, WPBakery, BeBuilder) in README, readme.txt and specification
+
 ## [0.1.1] – 2026-03-11
 
 ### Changed

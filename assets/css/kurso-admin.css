@@ -47,6 +47,5 @@
 .kurso-badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 12px; font-weight: 600; }
 .kurso-badge--ok { background: #d4edda; color: #155724; }
 .kurso-badge--warn { background: #fff3cd; color: #856404; }
-.kurso-shortcode-hint { margin-top: 6px; }
-.kurso-shortcode-hint summary { cursor: pointer; color: #2271b1; font-size: 12px; }
-.kurso-shortcode-hint code { display: block; background: #f6f7f7; padding: 4px 8px; margin-top: 4px; font-size: 12px; }
+.kurso-shortcode-cell { white-space: nowrap; }
+.kurso-shortcode-cell code { background: #f6f7f7; padding: 4px 8px; font-size: 12px; margin-right: 6px; }
