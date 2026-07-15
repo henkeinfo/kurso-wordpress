@@ -7,6 +7,9 @@ versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+- Release workflow marks tags with a pre-release suffix (e.g. `v1.0.0-rc.0`) as GitHub pre-release
+
 ## [1.0.0-rc.0] – 2026-07-15
 
 ### Added

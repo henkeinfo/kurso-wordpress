@@ -39,3 +39,5 @@ jobs:
         with:
           files: /tmp/build/kurso-wordpress-${{ steps.version.outputs.VERSION }}.zip
           generate_release_notes: true
+          # Tags with a suffix (v1.0.0-rc.0, v2.0.0-beta.1) become pre-releases
+          prerelease: ${{ contains(github.ref_name, '-') }}
