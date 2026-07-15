@@ -114,6 +114,14 @@ query {
 
 Drag the **"KURSO Display"** block from the *Embeds* category into the editor. Select query and template in the sidebar.
 
+### Page Builders
+
+The shortcode works in all common page builders — no extra configuration needed. Copy the shortcode for each query via the **Copy** button under *Settings → KURSO → Queries*.
+
+- **Elementor (including Free):** Add a **Shortcode** widget and paste `[kurso query="my-query"]`.
+- **WPBakery:** Add a **Text Block** element and paste the shortcode.
+- **BeBuilder (BeTheme):** Add a **Plain text** item (Section → Wrap → *+ Item* → Plain text) and paste the shortcode. Do **not** use the *Code* item — it displays shortcodes as text instead of executing them.
+
 ## Twig Syntax Quick Reference
 
 | Expression | Meaning |

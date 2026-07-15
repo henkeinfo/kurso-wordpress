@@ -352,6 +352,23 @@ Passend zu einer Query wie `{ Course(id: "123") { name startDate endDate locatio
 | `template` | Slug eines gespeicherten Templates | am Query hinterlegtes Template |
 | `class` | Zusätzliche CSS-Klasse für den Container | — |
 
+Der Shortcode jeder Query kann in der Query-Übersicht (`Einstellungen → KURSO → Queries`) per **Kopieren-Button** in die Zwischenablage übernommen werden.
+
+### Page-Builder-Integration
+
+Seiten, die nicht mit Gutenberg gebaut sind, binden die Ausgabe über den Shortcode ein. Es ist kein builder-spezifischer Code nötig:
+
+| Builder | Weg |
+|---|---|
+| Elementor (auch Free) | Shortcode-Widget |
+| WPBakery | Text-Block-Element |
+| BeBuilder (BeTheme) | Element „Plain text" (Section → Wrap → „+ Item"). **Nicht** das „Code"-Element — es zeigt Shortcodes nur an, statt sie auszuführen. |
+
+Hinweise:
+
+- In BeBuilder stehen Gutenberg-Blöcke nicht zur Verfügung (BeBuilder ersetzt den Gutenberg-Editor); BeBuilder bietet keine dokumentierte API für eigene Elemente.
+- Native Elemente für Elementor (Widget) und WPBakery (`vc_map`) sind bewusst zurückgestellt, bis Nachfrage besteht (siehe Offene Punkte).
+
 ---
 
 ## Datenfluss
@@ -476,4 +493,6 @@ filter: {
 - [ ] Suchfilter im Frontend (z.B. nach Ort oder Kurstyp filtern)
 - [ ] Mehrsprachigkeit (WPML-Kompatibilität)
 - [ ] Webhook-Support: KURSO triggert WordPress direkt bei Datenänderung (statt Polling)
-- [ ] Shortcode-Generator im Admin für nicht-technische Nutzer
+- [x] Shortcode-Generator im Admin für nicht-technische Nutzer *(erledigt: Shortcode-Spalte mit Kopieren-Button in der Query-Übersicht)*
+- [ ] Natives Elementor-Widget (Query-Dropdown statt Shortcode) — bei Bedarf
+- [ ] Natives WPBakery-Element via `vc_map` — bei Bedarf

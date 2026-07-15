@@ -1,6 +1,6 @@
 === KURSO for WordPress ===
 Contributors: kurso
-Tags: kurse, graphql, twig, shortcode, gutenberg
+Tags: kurse, graphql, twig, shortcode, gutenberg, elementor
 Requires at least: 6.0
 Tested up to: 6.0
 Requires PHP: 8.0
@@ -19,6 +19,7 @@ Das Plugin bietet:
 * Verbindung zur KURSO-API
 * Konfigurierbare Datenabfragen
 * Ausgabe per Gutenberg-Block oder Shortcode
+* Kompatibel mit Page Buildern (Elementor, WPBakery, BeBuilder) per Shortcode
 * Automatische Aktualisierung der Daten im Hintergrund
 
 Hinweis:
@@ -45,6 +46,14 @@ Mit dem KURSO-Block im Editor oder per Shortcode, z. B.:
 Optional mit CSS-Klasse:
 
 `[kurso query="meine-query" class="meine-klasse"]`
+
+= Funktioniert das Plugin mit Page Buildern (Elementor, WPBakery, BeBuilder)? =
+
+Ja, über den Shortcode. Kopieren Sie den Shortcode der gewünschten Query unter `Einstellungen -> KURSO -> Queries` und fügen Sie ihn ein:
+
+* **Elementor (auch Free):** Shortcode-Widget verwenden.
+* **WPBakery:** Text-Block-Element verwenden.
+* **BeBuilder (BeTheme):** Element "Plain text" verwenden (nicht das "Code"-Element — dieses zeigt Shortcodes nur an, statt sie auszuführen).
 
 = Wo richten Sie die Verbindung zu KURSO ein? =
 
