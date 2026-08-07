@@ -4,7 +4,7 @@ Tags: kurse, graphql, twig, shortcode, gutenberg, elementor
 Requires at least: 6.0
 Tested up to: 6.0
 Requires PHP: 8.0
-Stable tag: 1.0.0-rc.0
+Stable tag: 1.0.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 
@@ -21,10 +21,6 @@ Das Plugin bietet:
 * Ausgabe per Gutenberg-Block oder Shortcode
 * Kompatibel mit Page Buildern (Elementor, WPBakery, BeBuilder) per Shortcode
 * Automatische Aktualisierung der Daten im Hintergrund
-
-Hinweis:
-
-* Das Plugin ist aktuell in einer frühen Version (`0.0.1`). Bitte testen Sie es vor dem Produktiveinsatz gründlich.
 
 == Installation ==
 

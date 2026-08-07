@@ -7,8 +7,11 @@ versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.0] – 2026-08-07
+
 ### Changed
 - Release workflow marks tags with a pre-release suffix (e.g. `v1.0.0-rc.0`) as GitHub pre-release
+- Remove outdated "early version" notice from readme.txt
 
 ## [1.0.0-rc.0] – 2026-07-15
 
@@ -77,7 +80,8 @@ versioning follows [Semantic Versioning](https://semver.org/).
 - Admin CSS and JS (auto-slug from name)
 - Example templates in specification: course list, schedule by course type, single course detail
 
-[Unreleased]: https://github.com/henkeinfo/kurso-wordpress/compare/v1.0.0-rc.0...HEAD
+[Unreleased]: https://github.com/henkeinfo/kurso-wordpress/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/henkeinfo/kurso-wordpress/compare/v1.0.0-rc.0...v1.0.0
 [1.0.0-rc.0]: https://github.com/henkeinfo/kurso-wordpress/compare/v0.1.1...v1.0.0-rc.0
 [0.1.1]: https://github.com/henkeinfo/kurso-wordpress/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/henkeinfo/kurso-wordpress/compare/v0.0.1...v0.1.0
